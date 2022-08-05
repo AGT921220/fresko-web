@@ -1,0 +1,119 @@
+<div class="container-fluid">
+    <br />
+    <div class="row">
+        <div class="col-md-3">
+            <button type="button" class="btn btn-success" (click)="back()">
+              Regresar
+            </button>
+          </div>
+        <div class="col-md-4">
+            <h1>Creacion de Promociones</h1>
+        </div>
+        <div class="col-md-4">
+            <button type="button" class="btn btn-success" (click)="open(content, null)">Nueva Promocion</button>
+        </div>
+    </div>
+    <hr />
+    <div class="spinner-border text-dark mb-3" role="status" *ngIf="isLoading">
+        <span class="sr-only">Cargando...</span>
+    </div>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Editar</th>
+                <th scope="col">#</th>
+                <th scope="col">Promocion</th>
+                <th scope="col">Descripcion</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Usuarios</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of promos; let i = index">
+                <td><i class="fas fa-edit" (click)="open(content, item)"></i></td>
+                <td>{{ item.id }}</td>
+                <td>{{ item.promotion_name }}</td>
+                <td>{{ item.description }}</td>
+                <td>{{ item.tipo_promo }}</td>
+                <td><i class="fas fa-edit" (click)="modalUsuarios(usuarios, item)"></i></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title" (click)="open(content, order)">{{nueva_promo.editando == true ? 'Editando Promocion' : 'Nueva Promocion' }}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group" style="text-align: center;width:100% !important" *ngIf="nueva_promo.editando == false">
+            <label class="label-control">Tipo</label>
+            <select class="form-control" [(ngModel)]="tipo">
+                <option value="PROMOCION">PROMOCION</option>
+                <option value="PAQUETE">PAQUETE</option>
+            </select>
+        </div>
+        <div class="form-group" style="text-align: center;width:100% !important" *ngIf="tipo == 'PROMOCION'">
+            <label class="label-control">Tipo de Promocion</label>
+            <select class="form-control" [(ngModel)]="nueva_promo.tipo_promo">
+                <option value="ENVIO GRATIS">Envio Gratis</option>
+                <option value="DESCUENTO">Descuento</option>
+            </select>
+        </div>
+
+        <div class="form-group" style="text-align: center;width:100% !important">
+            <label class="label-control">{{tipo == 'PROMOCION' ? 'PROMOCION'  : 'PAQUETE' }}</label>
+            <input type="text" [(ngModel)]="nueva_promo.promotion_name" class="form-control"/>
+        </div>
+
+
+        <div class="form-group" style="text-align: center;width:100% !important">
+            <label class="label-control">Descripcion</label>
+            <input type="text" [(ngModel)]="nueva_promo.description" class="form-control"/>
+        </div>
+
+
+        <div class="form-group" style="text-align: center;width:100% !important" *ngIf="nueva_promo.tipo_promo == 'DESCUENTO' && tipo == 'PROMOCION'">
+            <label class="label-control">Monto Minimo de Compra ($)</label>
+            <input type="number" [(ngModel)]="nueva_promo.minimum_amount" class="form-control"/>
+        </div>
+
+
+        <div class="form-group" style="text-align: center;width:100% !important" *ngIf="nueva_promo.tipo_promo == 'DESCUENTO' && tipo == 'PROMOCION'">
+            <label class="label-control">% de Descuento</label>
+            <input type="number" [(ngModel)]="nueva_promo.discount_price" class="form-control"/>
+        </div>
+
+        <div class="form-group">
+            <img [src]="nueva_promo.imagen" *ngIf="nueva_promo.imagen != null" style="max-width:300px;max-height:300px"/>
+            <input type="file" accept="image/png" (change)="handleUpload($event.target.files)" class="form-control" />
+        </div> 
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close(false)">Cerrar</button>
+        <button type="button" class="btn btn-outline-primary" (click)="guardarPromo()"> {{ nueva_promo.editando == true ? 'Actualizar' : 'Registrar' }} </button>
+    </div>
+</ng-template>
+
+<ng-template #usuarios let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title" (click)="open(content, order)">Usuarios</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="content" id="content" #content>
+            <angular-slickgrid gridId="contentUsuarios" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+              [dataset]="dataset" style="width:100% !important" (onAngularGridCreated)="angularGridReady($event)">
+            </angular-slickgrid>
+          </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close(false)">Cerrar</button>
+        <button type="button" class="btn btn-outline-primary" (click)="guardarAnuncio()"> {{ nueva_promo.editando == true ? 'Actualizar Promocion' : 'Registrar Promocion' }} </button>
+    </div>
+</ng-template>

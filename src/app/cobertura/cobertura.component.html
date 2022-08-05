@@ -1,0 +1,54 @@
+<div class="container-fluid">
+  <br />
+  <div class="row">
+    <div class="col-md-3">
+      <button type="button" class="btn btn-success" (click)="back()">
+        Regresar
+      </button>
+    </div>
+    <div class="col-md-4">
+      <h1>Creacion de Coberturas</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="form-group">
+        <label class="label-control">Nombre</label>
+        <input type="text" [(ngModel)]="cobertura.cp" class="form-control" />
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <button type="button" class="btn btn-success"
+            (click)="operationCobertura()">{{cobertura.editando == false ? 'Guardar' : 'Actualizar'}}</button>
+        </div>
+        <div class="col-md-4" *ngIf="cobertura.editando == true">
+          <button type="button" class="btn btn-primary" (click)="cancelar()">Cancelar</button>
+        </div>
+        <div class="col-md-4" *ngIf="cobertura.editando == true">
+          <button type="button" class="btn btn-danger" (click)="eliminar()">Eliminar</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="spinner-border text-dark mb-3" role="status" *ngIf="isLoading">
+        <span class="sr-only">Cargando...</span>
+      </div>
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Editar</th>
+            <th scope="col">#</th>
+            <th scope="col">Codigo Postal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of coberturas; let i = index">
+            <td><i class="fas fa-edit" (click)="editarCobertura(item)"></i></td>
+            <td>{{ item.id }}</td>
+            <td>{{ item.codigo_postal }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

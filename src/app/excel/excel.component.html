@@ -1,0 +1,215 @@
+<div class="container-fluid">
+  <div class="row mb-2 text-right">
+    <div class="col-md-6"></div>
+    <div class="col-md-2">
+      <button type="button" class="btn btn-success" (click)="openUsers()">
+        Gestionar usuarios
+      </button>
+    </div>
+    <div class="col-md-4">
+      <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-secondary"  (click)="openPromos()">Promociones</button>
+        <button type="button" class="btn btn-secondary"  (click)="openAnuncios()">Anuncios</button>
+        <button type="button" class="btn btn-secondary"  (click)="openSubmenus()">Submenus</button>
+        <button type="button" class="btn btn-secondary"  (click)="openCoberturas()">Coberturas</button>
+      </div>
+    </div>
+
+  </div>
+  <br />
+  <h1>Generar archivo Excel de pedidos</h1>
+  <hr />
+  <div class="alert alert-danger" *ngIf="error">
+    <h3>Error</h3>
+    <p>{{ mensaje }}</p>
+  </div>
+
+  <div class="spinner-border text-dark mb-3" role="status" *ngIf="loading == true">
+    <span class="sr-only">Cargando...</span>
+  </div>
+  <div class="row mb-2">
+    <div class="col">
+      <input type="date" class="form-control" placeholder="Fecha inicio (AAAA-MM-DD)" value="{{ fechaInicio }}"
+        #inicio />
+    </div>
+    <div class="col">
+      <input type="date" class="form-control" placeholder="Fecha fin (AAAA-MM-DD)" value="{{ fechaActual }}" #fin />
+    </div>
+    <div class="col">
+      <button type="button" class="btn btn-dark" (click)="getOrders(inicio.value, fin.value)">
+        Obtener pedidos
+      </button>
+    </div>
+    <div class="col">
+      <button type="button" class="btn btn-success" (click)="downloadExcel(inicio.value, fin.value)">
+        Generar excel pedidos
+      </button>
+    </div>
+  </div>
+
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">#</th>
+        <th scope="col">Fecha</th>
+        <th scope="col">Cliente</th>
+        <th scope="col">Dirección</th>
+        <th scope="col">Teléfono</th>
+        <th scope="col">Comentarios</th>
+        <th scope="col">Horario</th>
+        <th scope="col">Comentarios horario</th>
+        <th scope="col">Precio aprox con promocion</th>
+        <th scope="col">Contenido pedido</th>
+        <th scope="col">Metodo de Pago</th>
+        <!-- <th scope="col">Descargar Excel</th> -->
+      </tr>
+    </thead>
+    <tbody *ngIf="!error">
+      <tr *ngFor="let order of orders; let i = index" (click)="open(content, order)">
+        <td *ngIf="order.es_promo"> <span class="badge badge-danger" style="font-size: 14px;">Promo</span></td>
+        <td *ngIf="!order.es_promo"></td>
+        <td>{{ order.idorder }}</td>
+        <td>{{ order.timestamp }}</td>
+        <td>{{ order.name }}</td>
+        <td>{{ order.street }} {{ order.streetnumber }} {{ order.colony }}</td>
+        <td>{{ order.telephone }}</td>
+        <td>{{ order.notes }}</td>
+        <td>{{ order.pickup }}</td>
+        <td>{{ order.pickupnotes }}</td>
+        <td>{{ order.price_real | currency }}</td>
+        <td>{{ order.content }}</td>
+        <td>{{ order.tipo_pago }} <span class="badge badge-success" *ngIf="order.pagado == 1" style="padding-left:5px;font-size: 14px;">PAGADO</span></td>
+        <!--         <td>
+          <button
+            type="button"
+            class="btn btn-success"
+            (click)="downloadExcelOrder(i, order.idorder)"
+          >
+            Descargar excel
+          </button>
+        </td> -->
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Informacion de Pedido #{{pedido_seleccionado.idorder}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group" style="text-align: center;width:100% !important"
+      *ngIf="pedido_seleccionado.es_promo == true">
+      <span class="badge badge-danger" style="font-size: 22px;">PROMOCION
+        {{pedido_seleccionado.nombre_promocion}}</span>
+    </div>
+    <div class="form-group" style="text-align: left;width:100% !important">
+      <div class="row">
+        <div class="col-md-3">
+          <label class="label-control" style="font-weight: bold;">#Pedido: </label>
+        </div>
+        <div class="col-md-8"> #{{pedido_seleccionado.idorder}}
+        </div>
+      </div>
+    </div>
+    <div class="form-group" style="text-align: left;width:100% !important">
+      <div class="row">
+        <div class="col-md-3">
+          <label class="label-control" style="font-weight: bold;">Cliente: </label>
+        </div>
+        <div class="col-md-8">
+          #{{pedido_seleccionado.name}}</div>
+      </div>
+    </div>
+    <div class="form-group" style="text-align: left;width:100% !important">
+      <div class="row">
+        <div class="col-md-3">
+          <label class="label-control" style="font-weight: bold;">Direccion: </label>
+        </div>
+        <div class="col-md-8">
+          #{{ pedido_seleccionado.street }}
+          {{ pedido_seleccionado.streetnumber }} {{ pedido_seleccionado.colony }}</div>
+      </div>
+    </div>
+    <div class="form-group" style="text-align: left;width:100% !important">
+      <div class="row">
+        <div class="col-md-3">
+          <label class="label-control" style="font-weight: bold;">Horario: </label> </div>
+        <div class="col-md-8"> {{pedido_seleccionado.pickup}}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group" style="text-align: left;width:100% !important">
+      <div class="row">
+        <div class="col-md-3">
+          <label class="label-control" style="font-weight: bold;">Notas: </label>
+        </div>
+        <div class="col-md-8">
+          {{pedido_seleccionado.notes}}
+        </div>
+      </div>
+    </div>
+    <div class="form-group" style="text-align: left;width:100% !important">
+      <div class="row">
+        <div class="col-md-3">
+          <label class="label-control" style="font-weight: bold;">Subtotal: </label>
+        </div>
+        <div class="col-md-6" *ngIf="!modificando">
+          {{pedido_seleccionado.price | currency}}
+        </div>
+        <div class="col-md-3" *ngIf="modificando">
+          <input type="number" placeholder="Subtotal" [(ngModel)]="new_price" (change)="onChangePrice()" class="form-control" />
+        </div>
+        <div class="col-md-3" *ngIf="modificando">
+          <input type="number" placeholder="Subtotal" [(ngModel)]="price_confirm" class="form-control" />
+        </div>
+        <div class="col-md-3">
+          <button type="button" class="btn btn-primary btn-xs" (click)="modificandoValor()">{{ modificando ? 'Cancelar' : 'Modificar' }}</button>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" style="text-align: left;width:100% !important" *ngIf="pedido_seleccionado.discount != 0">
+      <div class="row">
+        <div class="col-md-3">
+          <label class="label-control" style="font-weight: bold;">Descuento: </label>
+        </div>
+        <div class="col-md-8">
+          {{ pedido_seleccionado.descuento_otorgado | currency }} (
+          <strong>{{ pedido_seleccionado.discount }}%</strong>
+          )
+        </div>
+      </div>
+    </div>
+    <div class="form-group" style="text-align: left;width:100% !important">
+      <div class="row">
+        <div class="col-md-3">
+          <label class="label-control" style="font-weight: bold;">Envio: </label>
+        </div>
+        <div class="col-md-8">
+          {{ pedido_seleccionado.free_delivery == 1 ? '$0.00' : '$15.00' }}
+        </div>
+      </div>
+
+    </div>
+    <div class="form-group" style="text-align: left;width:100% !important">
+      <div class="row">
+        <div class="col-md-3">
+          <label class="label-control" style="font-weight: bold;">Total: </label>
+        </div>
+        <div class="col-md-8">
+          {{pedido_seleccionado.price_real | currency }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close(false)">Cerrar</button>
+    <button type="button" class="btn btn-outline-primary" (click)="actualizarPrecio()">Enviar Precio</button>
+  </div>
+</ng-template>

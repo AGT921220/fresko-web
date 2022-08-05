@@ -1,0 +1,43 @@
+<div class="container" style="width: 30%; background: #eaeaea;">
+  <form class="form-signin">
+    <img
+      class="mb-4"
+      [src]="globals.URL_LOGO"
+      alt=""
+      width="50%"
+      height="50%"
+    />
+    <h1 class="h3 mb-3 font-weight-normal">Mercasa</h1>
+    <label for="inputUsuario" class="sr-only">Usuario</label>
+    <input
+      type="text"
+      id="inputUsuario"
+      class="form-control"
+      placeholder="Usuario"
+      required=""
+      autofocus=""
+      #usuario
+    />
+    <label for="inputPassword" class="sr-only">Contraseña</label>
+    <input
+      type="password"
+      id="inputPassword"
+      class="form-control mt-1"
+      placeholder="Contraseña"
+      required=""
+      #contrasenna
+    />
+    <button
+      class="btn btn-lg btn-dark btn-block mt-3"
+      type="submit"
+      (click)="logIn(usuario.value, contrasenna.value)"
+    >
+      Iniciar sesión
+    </button>
+  </form>
+
+  <div *ngIf="error" class="alert alert-danger mt-5" role="alert">
+    <h5>Error</h5>
+    <p>{{ message }}</p>
+  </div>
+</div>
