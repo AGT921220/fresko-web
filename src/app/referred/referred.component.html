@@ -24,7 +24,7 @@
 
   </div>
   <br />
-  <h1>Generar archivo Excel de pedidos</h1>
+  <h1>Generar archivo Excel de pedidos Referidos</h1>
   <hr />
   <div class="alert alert-danger" *ngIf="error">
     <h3>Error</h3>
@@ -61,6 +61,7 @@
         <th scope="col">#</th>
         <th scope="col">Fecha</th>
         <th scope="col">Cliente</th>
+        <th scope="col">Referido</th>
         <th scope="col">Dirección</th>
         <th scope="col">Teléfono</th>
         <th scope="col">Comentarios</th>
@@ -79,6 +80,7 @@
         <td>{{ order.idorder }}</td>
         <td>{{ order.timestamp }}</td>
         <td>{{ order.name }}</td>
+        <td>{{ order.referido_name }}</td>
         <td>{{ order.street }} {{ order.streetnumber }} {{ order.colony }}</td>
         <td>{{ order.telephone }}</td>
         <td>{{ order.notes }}</td>

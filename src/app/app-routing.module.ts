@@ -5,6 +5,8 @@ import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 import { HomeComponent } from "./home/home.component";
 import { ExcelComponent } from "./excel/excel.component";
+import { ReferredComponent } from "./referred/referred.component";
+
 import { UsuariosComponent } from "./usuarios/usuarios.component";
 import { UsuarioComponent } from "./usuario/usuario.component";
 import { CrearPromocionesComponent } from "./crear-promociones/crear-promociones.component";
@@ -19,6 +21,8 @@ const routes: Routes = [
   { path: "anuncios", component: CrearAnunciosComponent },
   { path: "submenus", component: SubmenusComponent },
   { path: "cobertura", component: CoberturaComponent },
+  { path: "referidos", component: ReferredComponent },
+
   { path: "**", pathMatch: "full", redirectTo: "home" },
 ];
 
@@ -26,4 +30,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

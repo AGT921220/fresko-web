@@ -1,17 +1,17 @@
-import { GlobalService } from './../global.service';
+import { GlobalService } from '../global.service';
 import { formatDate } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { Globals } from "src/app/globals";
 import { ApiService } from "src/app/services/api.service";
-import { ExcelService } from "../services/excel.service";
+import { ReferredService } from "../services/referred.service";
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: "app-excel",
-  templateUrl: "./excel.component.html",
+  selector: "app-referred",
+  templateUrl: "./referred.component.html",
 })
-export class ExcelComponent implements OnInit {
+export class ReferredComponent implements OnInit {
   loading = false;
   error = false;
   orders: any = [];
@@ -27,7 +27,7 @@ export class ExcelComponent implements OnInit {
     private apiService: ApiService,
     public g: Globals,
     private router: Router,
-    private excelService: ExcelService,
+    private ReferredService: ReferredService,
     private modalService: NgbModal,
     private global:GlobalService
   ) {
@@ -35,7 +35,7 @@ export class ExcelComponent implements OnInit {
     this.fechaInicio = formatDate(dateToday, "yyyy-MM-dd", "en");
     dateToday.setDate(dateToday.getDate() + 1);
     this.fechaActual = formatDate(dateToday, "yyyy-MM-dd", "en");
-    this.getOrders(this.fechaInicio, this.fechaActual);
+    this.getOrdersReferreds(this.fechaInicio, this.fechaActual);
   }
 
   open(content, item) {
@@ -92,13 +92,13 @@ export class ExcelComponent implements OnInit {
     this.router.navigate(['cobertura']);
   }
 
-  getOrders(fechaInicio, fechaFin) {
+  getOrdersReferreds(fechaInicio, fechaFin) {
     this.error = false;
     this.loading = true;
     this.orders = [];
     let pre_orders = [];
     this.apiService
-      .getOrders(fechaInicio, fechaFin)
+      .getOrdersReferreds(fechaInicio, fechaFin)
       .subscribe((response: any) => {
         if (response.success == "1") {
           pre_orders = response.orders;
@@ -130,10 +130,10 @@ export class ExcelComponent implements OnInit {
   }
 
   downloadExcel(fechaInicio, fechaFin) {
-    this.excelService.createExcelFile(
+    this.ReferredService.createExcelFile(
       this.orders,
       this.products,
-      "Pedidos_" + fechaInicio + "_" + fechaFin
+      "Pedidos_Referidos" + fechaInicio + "_" + fechaFin
     );
   }
 
@@ -179,7 +179,7 @@ export class ExcelComponent implements OnInit {
         if(result.success){
           console.log('Aqui esta');
           this.modalService.dismissAll();
-          await this.getOrders(this.fechaInicio, this.fechaActual);
+          await this.getOrdersReferreds(this.fechaInicio, this.fechaActual);
         }
       }
 

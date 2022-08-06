@@ -130,6 +130,14 @@ export class ApiService {
       .set("date_end", fechaFin);
       return this.http.post(this.HOST + "getOrdersByDateV2.php", httpParams);
   }
+  getOrdersReferreds(fechaInicio, fechaFin) {
+    const httpParams = new HttpParams()
+      .set("date_start", fechaInicio)
+      .set("token", "RBE_DEV_@_#_|__*")
+      .set("date_end", fechaFin);
+      return this.http.post(this.HOST + "getReferredOrdersByDateV2.php", httpParams);
+  }
+
   getProducts() {
     const httpParams = new HttpParams().set("token", "RBE_DEV_@_#_|__*");
     return this.http.post(this.HOST + "getAllProducts.php", httpParams);
