@@ -69,8 +69,8 @@ export class ReferredComponent implements OnInit {
     });
   }
 
-  openReferreds() {
-    this.router.navigate(["referidos"]);
+  openExcel() {
+    this.router.navigate(["excel"]);
   }
 
   openUsers() {

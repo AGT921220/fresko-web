@@ -8,8 +8,8 @@
     </div>
     
     <div class="col-md-2">
-      <button type="button" class="btn btn-success" (click)="openReferreds()">
-        Creditos/Referidos
+      <button type="button" class="btn btn-success" (click)="openExcel()">
+        Excel
       </button>
     </div>
 
@@ -43,13 +43,13 @@
       <input type="date" class="form-control" placeholder="Fecha fin (AAAA-MM-DD)" value="{{ fechaActual }}" #fin />
     </div>
     <div class="col">
-      <button type="button" class="btn btn-dark" (click)="getOrders(inicio.value, fin.value)">
-        Obtener pedidos
+      <button type="button" class="btn btn-dark" (click)="getOrdersReferreds(inicio.value, fin.value)">
+        Obtener pedidos referenciados
       </button>
     </div>
     <div class="col">
       <button type="button" class="btn btn-success" (click)="downloadExcel(inicio.value, fin.value)">
-        Generar excel pedidos
+        Generar excel pedidos Referenciados
       </button>
     </div>
   </div>
