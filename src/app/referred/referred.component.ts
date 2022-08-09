@@ -5,7 +5,7 @@ import { Router } from "@angular/router";
 import { Globals } from "src/app/globals";
 import { ApiService } from "src/app/services/api.service";
 import { ReferredService } from "../services/referred.service";
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: "app-referred",
@@ -29,7 +29,7 @@ export class ReferredComponent implements OnInit {
     private router: Router,
     private ReferredService: ReferredService,
     private modalService: NgbModal,
-    private global:GlobalService
+    private global: GlobalService
   ) {
     const dateToday = new Date();
     this.fechaInicio = formatDate(dateToday, "yyyy-MM-dd", "en");
@@ -43,7 +43,7 @@ export class ReferredComponent implements OnInit {
     this.price_confirm = 0;
     this.new_price = item.price;
     this.pedido_seleccionado = item;
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
       console.log(`Closed with: ${result}`);
     }, (reason) => {
       console.log(`Dismissed ${this.getDismissReason(reason)}`);
@@ -73,6 +73,10 @@ export class ReferredComponent implements OnInit {
     this.router.navigate(["excel"]);
   }
 
+  openCommissions() {
+    this.router.navigate(["commissions"]);
+  }
+
   openUsers() {
     this.router.navigate(["usuarios"]);
   }
@@ -84,11 +88,11 @@ export class ReferredComponent implements OnInit {
     this.router.navigate(["anuncios"]);
   }
 
-  openSubmenus(){
+  openSubmenus() {
     this.router.navigate(['submenus']);
   }
 
-  openCoberturas(){
+  openCoberturas() {
     this.router.navigate(['cobertura']);
   }
 
@@ -102,18 +106,18 @@ export class ReferredComponent implements OnInit {
       .subscribe((response: any) => {
         if (response.success == "1") {
           pre_orders = response.orders;
-          for(var i = 0; i < pre_orders.length; i++){
-            if(parseInt(pre_orders[i].free_delivery) == 1 || parseInt(pre_orders[i].discount) != 0){
+          for (var i = 0; i < pre_orders.length; i++) {
+            if (parseInt(pre_orders[i].free_delivery) == 1 || parseInt(pre_orders[i].discount) != 0) {
               pre_orders[i].es_promo = true;
-              if(pre_orders[i].discount != 0){
+              if (pre_orders[i].discount != 0) {
                 let descuento = pre_orders[i].price * parseFloat("0." + pre_orders[i].discount);
                 pre_orders[i].descuento_otorgado = descuento;
                 pre_orders[i].nombre_promocion = "DESCUENTO";
-              } else{
+              } else {
                 pre_orders[i].descuento_otorgado = 0;
                 pre_orders[i].nombre_promocion = "ENVIO GRATIS";
               }
-            } else{
+            } else {
               pre_orders[i].es_promo = false;
               pre_orders[i].descuento_otorgado = 0;
               pre_orders[i].nombre_promocion = "";
@@ -137,53 +141,54 @@ export class ReferredComponent implements OnInit {
     );
   }
 
-  modificandoValor(){
-    if(this.modificando){
+  modificandoValor() {
+    if (this.modificando) {
       //RESTAURAR
       this.new_price = this.pedido_seleccionado.price;
     }
     this.modificando = !this.modificando;
   }
 
-  onChangePrice(){
+  onChangePrice() {
     console.log('New Price', this.new_price);
     console.log('Pedido', this.pedido_seleccionado);
-    if(this.pedido_seleccionado.free_delivery == 1){
+    if (this.pedido_seleccionado.free_delivery == 1) {
       this.pedido_seleccionado.price_real = this.new_price - 15;
-    } else if(this.pedido_seleccionado.discount != null && this.pedido_seleccionado.discount != 0){
-      let descuento = this.new_price *  (this.pedido_seleccionado.discount / 100);
+    } else if (this.pedido_seleccionado.discount != null && this.pedido_seleccionado.discount != 0) {
+      let descuento = this.new_price * (this.pedido_seleccionado.discount / 100);
       this.pedido_seleccionado.descuento_otorgado = descuento;
       this.pedido_seleccionado.price_real = (this.new_price - descuento) + 15;
     }
   }
 
-  async actualizarPrecio(){
-    if(this.new_price >= 1){
-      if(this.new_price != this.price_confirm && this.modificando){
+  async actualizarPrecio() {
+    if (this.new_price >= 1) {
+      if (this.new_price != this.price_confirm && this.modificando) {
         return this.global.showErrorToast("Los precios deben coincidir.");
       }
       let result = null;
       //Actualizarlo.
-      await this.apiService.updatePrice(this.new_price, this.pedido_seleccionado.tipo_pago, this.pedido_seleccionado.idorder, this.pedido_seleccionado.iduser).toPromise().then((response:any)=>{
-        result = response;
-        if(response.success){
-          this.global.showSuccessToast(response.message, "Actualizacion de Precio");
-        } else{
-          this.global.showErrorToast(response.message, "Actualizacion de Precio");
-        }
-      }).catch(error =>{
-        this.global.showErrorToast(JSON.stringify(error));
-      });
+      await this.apiService.updatePriceReferred(this.new_price, this.pedido_seleccionado.tipo_pago,
+        this.pedido_seleccionado.idorder, this.pedido_seleccionado.iduser, this.pedido_seleccionado.referido_id,this.pedido_seleccionado.referido_promotor).toPromise().then((response: any) => {
+          result = response;
+          if (response.success) {
+            this.global.showSuccessToast(response.message, "Actualizacion de Precio");
+          } else {
+            this.global.showErrorToast(response.message, "Actualizacion de Precio");
+          }
+        }).catch(error => {
+          this.global.showErrorToast(JSON.stringify(error));
+        });
 
-      if(result != null){
-        if(result.success){
+      if (result != null) {
+        if (result.success) {
           console.log('Aqui esta');
           this.modalService.dismissAll();
           await this.getOrdersReferreds(this.fechaInicio, this.fechaActual);
         }
       }
 
-    } else{
+    } else {
       return this.global.showErrorToast("Ingresa el subtotal nuevo..");
     }
   }

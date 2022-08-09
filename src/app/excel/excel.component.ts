@@ -73,6 +73,10 @@ export class ExcelComponent implements OnInit {
     this.router.navigate(["referidos"]);
   }
 
+  openCommissions() {
+    this.router.navigate(["commissions"]);
+  }
+
   openUsers() {
     this.router.navigate(["usuarios"]);
   }

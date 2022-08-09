@@ -20,6 +20,7 @@ import { AngularSlickgridModule } from 'angular-slickgrid';
 import { CrearAnunciosComponent } from './crear-anuncios/crear-anuncios.component';
 import { SubmenusComponent } from './submenus/submenus.component';
 import { CoberturaComponent } from './cobertura/cobertura.component';
+import { CommissionsComponent } from './commissions/commissions';
 import { ReferredComponent } from './referred/referred.component';
 
 
@@ -34,7 +35,8 @@ import { ReferredComponent } from './referred/referred.component';
     CrearAnunciosComponent,
     SubmenusComponent,
     CoberturaComponent,
-    ReferredComponent
+    ReferredComponent,
+    CommissionsComponent
   ],
   imports: [
     BrowserModule,

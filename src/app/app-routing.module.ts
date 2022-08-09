@@ -10,6 +10,7 @@ import { ReferredComponent } from "./referred/referred.component";
 import { UsuariosComponent } from "./usuarios/usuarios.component";
 import { UsuarioComponent } from "./usuario/usuario.component";
 import { CrearPromocionesComponent } from "./crear-promociones/crear-promociones.component";
+import { CommissionsComponent } from './commissions/commissions';
 
 const routes: Routes = [
   { path: "home", component: HomeComponent },
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: "submenus", component: SubmenusComponent },
   { path: "cobertura", component: CoberturaComponent },
   { path: "referidos", component: ReferredComponent },
+  { path: "commissions", component: CommissionsComponent },
 
   { path: "**", pathMatch: "full", redirectTo: "home" },
 ];

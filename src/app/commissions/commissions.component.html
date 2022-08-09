@@ -1,0 +1,136 @@
+<div class="container-fluid">
+  <div class="row mb-2 text-right">
+    <div class="col-md-4"></div>
+    <div class="col-md-2">
+      <button type="button" class="btn btn-success" (click)="openUsers()">
+        Gestionar usuarios
+      </button>
+    </div>
+    
+    <div class="col-md-2">
+      <button type="button" class="btn btn-success" (click)="openExcel()">
+        Excel
+      </button>
+    </div>
+
+    <div class="col-md-2">
+      <button type="button" class="btn btn-success" (click)="openReferreds()">
+        Creditos/Referidos
+      </button>
+    </div>
+
+    <div class="col-md-4">
+      <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-secondary"  (click)="openPromos()">Promociones</button>
+        <button type="button" class="btn btn-secondary"  (click)="openAnuncios()">Anuncios</button>
+        <button type="button" class="btn btn-secondary"  (click)="openSubmenus()">Submenus</button>
+        <button type="button" class="btn btn-secondary"  (click)="openCoberturas()">Coberturas</button>
+      </div>
+    </div>
+
+  </div>
+  <br />
+  <h1>Generar archivo Excel de pedidos Referidos</h1>
+  <hr />
+  <div class="alert alert-danger" *ngIf="error">
+    <h3>Error</h3>
+    <p>{{ mensaje }}</p>
+  </div>
+
+  <div class="spinner-border text-dark mb-3" role="status" *ngIf="loading == true">
+    <span class="sr-only">Cargando...</span>
+  </div>
+  <div class="row mb-2">
+    <div class="col">
+      <input type="date" class="form-control" placeholder="Fecha inicio (AAAA-MM-DD)" value="{{ fechaInicio }}"
+        #inicio />
+    </div>
+    <div class="col">
+      <input type="date" class="form-control" placeholder="Fecha fin (AAAA-MM-DD)" value="{{ fechaActual }}" #fin />
+    </div>
+    <div class="col">
+      <button type="button" class="btn btn-dark" (click)="getCommissions()">
+        Obtener Comisiones
+      </button>
+    </div>
+    <div class="col">
+      <button type="button" class="btn btn-success" (click)="downloadExcel(inicio.value, fin.value)">
+        Generar excel de Comisiones
+      </button>
+    </div>
+  </div>
+
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#Referido</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Teléfono</th>
+        <th scope="col">Expiración</th>
+        <th scope="col">Comisión</th>
+
+
+        <!-- <th scope="col">Descargar Excel</th> -->
+      </tr>
+    </thead>
+    <tbody *ngIf="!error">
+      <tr *ngFor="let commission of commissions; let i = index" (click)="open(content, commission)">
+        <td>{{commission.referido_id}}</td>
+        <td>{{commission.name}}</td>
+        <td>{{commission.telephone}}</td>
+        <td>{{commission.validity_at}}</td>
+        <td>${{(commission.commission)?commission.commission:'0.00'}} MXN</td>
+
+        <!--         <td>
+          <button
+            type="button"
+            class="btn btn-success"
+            (click)="downloadExcelOrder(i, order.idorder)"
+          >
+            Descargar excel
+          </button>
+        </td> -->
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Aplicar Comisión</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+
+    <div class="form-group" style="text-align: left;width:100% !important">
+      <div class="row">
+        <div class="col-md-3">
+          <label class="label-control" style="font-weight: bold;">Cliente: </label>
+        </div>
+        <div class="col-md-8">
+          #{{pedido_seleccionado.name}}</div>
+      </div>
+    </div>
+
+
+
+    <div class="form-group" style="text-align: left;width:100% !important">
+      <div class="row">
+        <div class="col-md-3">
+          <label class="label-control" style="font-weight: bold;">Total: </label>
+        </div>
+        <div class="col-md-8">
+          {{pedido_seleccionado.commission }} MXN
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close(false)">Cerrar</button>
+    <button type="button" class="btn btn-outline-primary" (click)="applyCommission(pedido_seleccionado.commission_id)">Aplicar</button>
+  </div>
+</ng-template>

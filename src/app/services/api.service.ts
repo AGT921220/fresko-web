@@ -66,6 +66,19 @@ export class ApiService {
     return this.http.post(this.HOST + "updatePrice.php", httpParams);
   }
 
+  updatePriceReferred(
+    precio_final, tipo_pago, idorder, iduser, idReferido, referidoPromotor
+  ) {
+    const httpParams = new HttpParams()
+      .set("precio_final", precio_final)
+      .set("tipo_pago", tipo_pago)
+      .set("idorder", idorder)
+      .set("iduser", iduser)
+      .set('referido_promotor', referidoPromotor)
+      .set("ir_referido", idReferido);
+    return this.http.post(this.HOST + "updatePriceReferred.php", httpParams);
+  }
+
   addPromo(obj) {
     const httpParams = new HttpParams()
       .set("data", JSON.stringify(obj));
@@ -138,6 +151,12 @@ export class ApiService {
       return this.http.post(this.HOST + "getReferredOrdersByDateV2.php", httpParams);
   }
 
+  getCommissions() {
+    const httpParams = new HttpParams()
+      .set("token", "RBE_DEV_@_#_|__*")
+      return this.http.post(this.HOST + "getCommissions.php", httpParams);
+  }
+
   getProducts() {
     const httpParams = new HttpParams().set("token", "RBE_DEV_@_#_|__*");
     return this.http.post(this.HOST + "getAllProducts.php", httpParams);
@@ -199,5 +218,13 @@ export class ApiService {
       .set("reference", "");
 
     return this.http.post(this.HOST + "insertUser.php", httpParams);
+  }
+
+  
+  applyCommission(commissionId) {
+    const httpParams = new HttpParams()
+      .set("token", "RBE_DEV_@_#_|__*")
+      .set("commission_id", commissionId);
+    return this.http.post(this.HOST + "applyCommission.php", httpParams);
   }
 }

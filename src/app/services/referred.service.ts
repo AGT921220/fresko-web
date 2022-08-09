@@ -14,20 +14,19 @@ export class ReferredService {
     let sheet = workbook.addWorksheet("Pedidos");
     const headers = [
       { header: "Pedido", key: "idorder", width: 10 },
-      { header: "Fecha", key: "timestamp", width: 10 },
-      { header: "Cliente", key: "name", width: 10 },
-      { header: "Referido", key: "referido_name", width: 10 },      
-      { header: "Direccion", key: "street", width: 10 },
-      { header: "Número", key: "streetnumber", width: 10 },
-      { header: "Colonia", key: "colony", width: 10 },
-      { header: "Telefono", key: "telephone", width: 10 },
-      { header: "Notas", key: "notes", width: 10 },
-      { header: "Recogida", key: "pickup", width: 10 },
-      { header: "Notas_Recogida", key: "pickupnotes", width: 10 },
-      { header: "Precio aprox.", key: "price", width: 10 },
-      /* { header: "Producto", key: "content", width: 32 },
-      { header: "Kilos", key: "kg", width: 10 },
-      { header: "Piezas", key: "pc", width: 10 } */
+      { header: "Fecha", key: "timestamp", width: 30 },
+      { header: "Cliente", key: "name", width: 25 },
+      { header: "Referido", key: "referido_name", width: 25 },      
+      { header: "Direccion", key: "street", width: 25 },
+      { header: "Número", key: "streetnumber", width: 25 },
+      { header: "Colonia", key: "colony", width: 25 },
+      { header: "Telefono", key: "telephone", width: 25 },
+      { header: "Notas", key: "notes", width: 25 },
+      { header: "Recogida", key: "pickup", width: 25 },
+      { header: "Notas_Recogida", key: "pickupnotes", width: 25 },
+      { header: "Precio aprox.", key: "price", width: 25 },
+      { header: "Saldo Referidos", key: "total_commissions", width: 25 },
+
     ];
     let maxProducts = 1;
     orders.forEach(function (order) {
@@ -52,6 +51,8 @@ export class ReferredService {
     orders.forEach(function (order) {
       let orderProducts = order.content.split("\n");
 
+      let total = (order.total_commissions)?'$'+order.total_commissions+' MXN' :'$0.00'
+
       const rowValues = [];
       rowValues[1] = order.idorder;
       rowValues[2] = order.timestamp;
@@ -65,8 +66,11 @@ export class ReferredService {
       rowValues[10] = order.pickup;
       rowValues[11] = order.pickupnotes;
       rowValues[12] = order.price;
+      rowValues[13] = total;
 
-      let column = 13;
+      
+
+      let column = 14;
       for (
         let countProducts = 0;
         countProducts < orderProducts.length - 1;
@@ -101,7 +105,7 @@ export class ReferredService {
     let sheetKg = workbook.addWorksheet("Pedidos - Kilos");
     const headersKg = [
       { header: "Pedido", key: "idorder", width: 10 },
-      { header: "Fecha", key: "timestamp", width: 10 },
+      { header: "Fecha", key: "timestamp", width: 30 },
       { header: "Cliente", key: "name", width: 10 },
       { header: "Referido", key: "referido_name", width: 10 },
       { header: "Direccion", key: "street", width: 10 },
@@ -112,6 +116,8 @@ export class ReferredService {
       { header: "Recogida", key: "pickup", width: 10 },
       { header: "Notas_Recogida", key: "pickupnotes", width: 10 },
       { header: "Precio aprox.", key: "price", width: 10 },
+      { header: "Saldo Referidos", key: "total_commissions", width: 10 },
+
     ];
 
     for (let countProduct = 0; countProduct < products.length; countProduct++) {
@@ -142,8 +148,10 @@ export class ReferredService {
       rowValues[10] = order.pickup;
       rowValues[11] = order.pickupnotes;
       rowValues[12] = order.price;
+      rowValues[13] = order.total_commissions;
 
-      let column = 13;
+      
+      let column = 14;
       products.forEach(function (product) {
         rowValues[column] = product.product;
         column++;
